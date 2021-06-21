@@ -1,0 +1,189 @@
+.navbar-nav.navbar-center {
+    position: absolute;
+    left: 50%;
+    transform: translatex(-50%);
+}
+
+/*.navbar-nav.navbar-right{
+    position: absolute;
+    left: 81.28%;
+    transform: translatex(-0%);
+}*/
+
+.navbar-nav > a {
+	text-transform: capitalize;
+	color: white;
+	font-size: 17px;
+	padding: 18px;
+	display: inline-block;
+	height: 60px;
+	transition: background-color .4s, color .4s;
+}
+
+.navbar-nav > a.active {
+    display: inline-block;
+	background-color: #269882 !important;
+	height: 60px;
+	color: #c7fcf2 !important;
+}
+
+.navbar-nav > a:hover {
+    display: inline-block;
+	background-color: #2bac93;
+	height: 60px;
+	color: #e2f7f3;
+	transition: background-color .1s, color .1s;
+}
+
+.dropdown-menu {
+    margin-top: 0px;
+}
+
+#therapist_name {
+    font-weight: bold;
+    font-size: 15px;
+    margin-right: 7px;
+    line-height: 20px;
+}
+
+#dropdown-navbar {
+    display: fixed;
+    top: 0px;
+    z-index: 500;
+    margin-top: -60px;
+    height: 0px;
+
+}
+
+.navbar-nav > div {
+    display: table;
+    height: 60px;
+    padding-top: 10px;
+    transition: background-color .4s, color .4s;
+}
+
+.navbar-nav > div:hover {
+    background-color: #2bac93;
+    display: table;
+    height: 60px;
+    padding-top: 10px;
+    transition: background-color .1s, color .1s;
+}
+
+.navbar-nav > div:hover > a {
+    color: #e2f7f3 !important;
+    transition: background-color .1s, color .1s;
+}
+
+.dropdown-item:active {
+    background-color: #2bac93 !important;
+}
+
+.side-icons {
+    font-size: 31px;
+}
+
+.mid-icons {
+    font-size: 28px;
+}
+
+.alert {
+    z-index: 300;
+}
+
+.loading_screen {
+    display: none;
+    position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,.5);
+	z-index: 1500;
+}
+
+.loading_screen .spinner-border {
+    display: none;
+    color: #2cba9f !important;
+    font-size: 50px;
+    position: absolute;
+    margin-top: -80px;
+    margin-left: -60px;
+    padding: 0px;
+    left: 50%;
+    top: 50%;
+    height: 120px;
+    width: 120px;
+}
+
+.btn-green {
+    color:#ffffff !important;
+    background-color: #2cba9f !important;
+    border-color: #2bac93 !important;
+}
+
+.btn-green:hover {
+    color:#ffffff !important;
+    background-color: #2bac93 !important;
+    border-color: #2bac93 !important;
+}
+
+.btn-green:active {
+    color:#ffffff !important;
+    background-color: #269882 !important;
+    border-color: #269882 !important;
+}
+
+.page-header {
+    padding-top: 20px;
+    margin-bottom: 0px;
+}
+
+.page-header p {
+    margin-left: 10px;
+    font-size: 25px;
+    margin-bottom: 0px;
+}
+
+.custom-checkbox {
+    margin-bottom: 15px;
+    margin-top: 0px;
+    padding-top: 0px;
+}
+
+.custom-checkbox .custom-control-input:not(:checked) ~ .custom-control-label::before {
+    border-color: #cad0d5 !important;
+}
+
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+  background-color: #2cba9f !important;
+  border-color: #269882 !important;
+}
+
+.custom-checkbox .custom-control-input:checked:focus ~ .custom-control-label::before {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(0, 255, 0, 0.25)
+}
+.custom-checkbox .custom-control-input:focus ~ .custom-control-label::before {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem #2bac93 !important
+}
+.custom-checkbox .custom-control-input:active ~ .custom-control-label::before {
+  background-color: #2bac93 !important;
+}
+
+/* remove validation icons */
+.form-control:invalid {
+    background-image: none !important;
+    padding-right: 0px !important;
+}
+
+.form-control:valid {
+    background-image: none !important;
+    padding-right: 0px !important;
+}
+
+.invalid-feedback {
+    position: absolute;
+    height: 14px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}

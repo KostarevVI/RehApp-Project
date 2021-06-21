@@ -1,0 +1,21 @@
+.overflow-auto {
+    max-height: 570px;
+    background: #fff; /* цвет фона, белый */
+    border: 1px solid #dee3e6; /* размер и цвет границы блока */
+    border-radius: 10px 10px 10px 10px;
+}
+
+.card {
+    margin: 15px;
+}
+
+.card img {
+    margin: 15px;
+    margin-left: 35px;
+
+}
+
+.info-btn-style {
+    position: relative;
+    margin-top:-9px;
+}

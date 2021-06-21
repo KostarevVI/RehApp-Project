@@ -1,0 +1,79 @@
+.overflow-auto {
+    max-height: 550px;
+    background: #fff; /* цвет фона, белый */
+    border: 1px solid #dee3e6; /* размер и цвет границы блока */
+    border-radius: 10px 10px 10px 10px;
+}
+
+.card {
+    margin: 15px;
+}
+
+.card img {
+    margin: 15px;
+    margin-left: 47px;
+
+}
+
+.btn-pot-style {
+    position: relative;
+    margin-top:-55px;
+    transform:translatey(15%);
+}
+
+.btn-more-info {
+    width: 130px;
+    margin-bottom: 10px;
+}
+
+.btn-plan {
+    width: 130px;
+    margin-bottom: 0px;
+}
+
+#selectAffectedSide {
+    display: static;
+    width: 94px !important;
+}
+
+.patient-info-disabled {
+    pointer-events: none;
+}
+
+.form-group{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.small{
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+input{
+    margin-top: 0px !important;
+}
+
+#overflow_info > hr {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+#overflow_info {
+    max-height: 410px !important;
+    background: #fff; /* цвет фона, белый */
+    border: 0px solid #dee3e6; /* размер и цвет границы блока */
+    border-radius: 0px 0px 0px 0px !important;
+    padding:12px;
+    magrin-bottom: 0px; !important
+}
+
+#change_info_bar {
+    padding-right:7px;
+    margin-top: 0px;
+}
+
+.angle-edit {
+    background-color: #e9f0fe;
+    color: #212529;
+}

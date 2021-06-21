@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="../static/css/style.css" type="text/css" />
+
+    <link type="image/png" sizes="96x96" rel="icon" href="../static/img/rehapp_logo2_hUu_icon.ico">
+    <link type="image/png" sizes="32x32" rel="icon" href="../static/img/rehapp_logo2_6kQ_icon.ico">
+    <link type="image/png" sizes="16x16" rel="icon" href="../static/img/rehapp_logo2_zf4_icon.ico">
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.min.js"
+
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="http://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/jquery_scripts.js')}}"></script>
+    <script
+            type="text/javascript"
+            src="{{ url_for('static', filename='js/index.js')}}"></script>
+
+
+    <title>
+      {% if title %}
+        {{ title }}
+      {% else %}
+        RehApp
+      {% endif %}
+    </title>
+
+    {% block styles %}
+
+    {% endblock %}
+
+  </head>
+
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-default" style="background-color: #2cba9f;">
+        <div class="container">
+          {% if current_user.is_authenticated %}    <!-- .is_authenticated-->
+          <a class="navbar-brand font-weight-bold" style="color: white">
+            <img src="../static/img/rehapp_logo5.png" width="40" height="32" alt="">
+            RehApp
+          </a>
+
+
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbar"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbar">
+            <div class="navbar-nav navbar-center nav-justified w-50">
+                <a class="nav-item nav-link {%if title == 'Dashboard'%} active {%endif%}" id="dashboard" href="/dash">
+                  <i class="fa fa-lg fa-list side-icons align-bottom"></i>&nbsp;  Dashboard</a>
+                <a class="nav-item nav-link {%if title == 'Patients'%} active {%endif%}" id="patients" href="/patients">
+                  <i class="fa fa-lg fa-users mid-icons align-middle"></i>&nbsp;  Patients</a>
+                <a class="nav-item nav-link {%if title == 'Schedule'%} active {%endif%}" id="schedule" href="/schedule">
+                  <i class="fa fa-lg fa-calendar mid-icons align-middle" ></i>&nbsp;  Schedule</a>
+                <a class="nav-item nav-link {%if title == 'Training'%} active {%endif%}" id="training" href="/training">
+                  <i class="fa fa-lg fa-edit side-icons align-bottom"></i>&nbsp; Training</a>
+            </div>
+          </div>
+
+
+          <div class="navbar-nav navbar-right" id="dropdown-navbar">
+            <div class="dropdown" style="width: 125px; margin-left: -20px;">
+              <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-toggle="dropdown" aria-expanded="false" style="color: white; display: block; padding-left: 11px">
+                <span class="text-right" style="vertical-align: middle; display: inline-block;" id="therapist_name">
+                  {% if current_user.first_name|length < 12  %}
+                    {{current_user.first_name}}
+                  {% else%}
+                    {{current_user.first_name[0] + '.'}}
+                  {% endif %}
+                  <br>
+                  {% if current_user.last_name|length < 12  %}
+                    {{current_user.last_name}}
+                  {% else%}
+                    {{current_user.last_name[0] + '.'}}
+                  {% endif %}
+                </span>
+                <img src="../static/img/User_Placeholder.png" alt="usr_ico" width="40" height="40" class="rounded-circle">
+              </a>
+              <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownUser1">
+                <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                <li><a class="dropdown-item" href="/help">Help</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/sign_out">Sign Out</a></li>
+              </ul>
+            </div>
+          </div>
+          {% else %}
+          <a class="navbar-brand mx-auto font-weight-bold" style="color: white; margin-top: 3px;">
+            RehApp
+          </a>
+          {% endif %}
+        </div>
+      </nav>
+    </header>
+
+    <div class="container">
+      <div class="position-relative w-100">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            {% if category == 'error' %}
+              <div class="alert alert-danger alter-dismissable fade show position-absolute w-100" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            {% elif category == 'success'%}
+              <div class="alert alert-success alter-dismissable fade show position-absolute w-100" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            {% elif category == 'warning'%}
+              <div class="alert alert-warning alter-dismissable fade show position-absolute w-100" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      </div>
+
+      <div class="loading_screen" id="loading">
+        <div class="spinner-border text-light" id="spinner" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+
+      {% block content %}
+
+      {% endblock %}
+
+    </div>
+  </body>
+
+
+</html>
+

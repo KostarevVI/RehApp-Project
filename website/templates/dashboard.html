@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+
+{% block styles %}
+  <link rel="stylesheet" href="../static/css/style_dashboard.css" type="text/css" />
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+        <p>Here you can see Patients' Trainings for the Last Month</p>
+</div>
+
+<hr>
+
+{% if patients_with_trainings %}
+
+<div class="overflow-auto">
+    {% for pws in patients_with_trainings %}
+        {% if pws.stop_reason == None %}
+
+            <div class="card alert-secondary">
+              <div class="row g-0">
+                <div class="col-md-2">
+                    <img class="justify-content rounded-circle" width="123" height="123" src="../static/img/User_Placeholder.png" alt="patient_pic">
+                </div>
+                <div class="col-md-10">
+                  <div class="card-body">
+                    <h5 class="card-title mb-0">{{pws.patient.first_name + ' ' + pws.patient.last_name}}</h5>
+                      <p class="card-subtitle"><small class="text-muted">ID:{{pws.patient.id}}</small></p>
+                      <div class="row g-0">
+                          <div class="col-md-4">
+                              <p class="card-text m-0">Planned Training Date: {{pws.training_date}}</p>
+                              <p class="card-text m-0">Exercises amount: {{pws.exercises_amount}}</p>
+                              <p class="card-text m-0">Status: Skipped</p>
+                          </div>
+                          <div class="col-md-4 pl-4">
+                              <p class="card-text m-0">Training Skipped on {{pws.execution_date}}</p>
+                          </div>
+                          <div class="col-md-4 text-center">
+                              <button type="button" class="btn btn-lg btn-info info-btn-style" onClick="" id="info_btn_1">
+                                  More Info
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        {% elif pws.stop_reason == 'end' %}
+
+            <div class="card alert-success">
+              <div class="row g-0">
+                <div class="col-md-2">
+                    <img class="justify-content rounded-circle" width="123" height="123" src="../static/img/User_Placeholder.png" alt="patient_pic">
+                </div>
+                <div class="col-md-10">
+                  <div class="card-body">
+                    <h5 class="card-title mb-0">{{pws.patient.first_name + ' ' + pws.patient.last_name}}</h5>
+                      <p class="card-subtitle"><small class="text-muted">ID:{{pws.patient.id}}</small></p>
+                      <div class="row g-0">
+                          <div class="col-md-4">
+                              <p class="card-text m-0">Planned Training Date: {{pws.training_date}}</p>
+                              <p class="card-text m-0">Exercises done/total: {{pws.exercise_done_count}}/{{pws.exercises_amount}}</p>
+                              <p class="card-text m-0">Status: Completed</p>
+                          </div>
+                          <div class="col-md-4 pl-4">
+                              <p class="card-text m-0">Execution Date: {{pws.execution_date}}</p>
+                              <p class="card-text m-0">Duration: {{pws.training_duration}}</p>
+                              <p class="card-text m-0">Spasms: {{pws.spasms_total}}</p>
+                          </div>
+                          <div class="col-md-4 text-center">
+                              <button type="button" class="btn btn-lg btn-info info-btn-style" onClick="" id="info_btn_2">
+                                  More Info
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        {% else %}
+
+            <div class="card alert-danger">
+              <div class="row g-0">
+                <div class="col-md-2">
+                    <img class="justify-content rounded-circle" width="123" height="123" src="../static/img/User_Placeholder.png" alt="patient_pic">
+                </div>
+                <div class="col-md-10">
+                  <div class="card-body">
+                    <h5 class="card-title mb-0">{{pws.patient.first_name + ' ' + pws.patient.last_name}}</h5>
+                      <p class="card-subtitle"><small class="text-muted">ID:{{pws.patient.id}}</small></p>
+                      <div class="row g-0">
+                          <div class="col-md-4">
+                              <p class="card-text m-0">Planned Training Date: {{pws.training_date}}</p>
+                              <p class="card-text m-0">Exercises done/total: {{pws.exercise_done_count}}/{{pws.exercises_amount}}</p>
+                              <p class="card-text m-0">Status: Stopped</p>
+                          </div>
+                          <div class="col-md-4 pl-4">
+                              <p class="card-text m-0">Execution Date: {{pws.execution_date}}</p>
+                              <p class="card-text m-0">Duration: {{pws.training_duration}}</p>
+                              <p class="card-text m-0">Stop Reason: {{pws.stop_reason}} {%if pws.stop_reason == "spasms"%}({{ pws.spasms_total }}){%endif%}</p>
+                          </div>
+                          <div class="col-md-4 text-center">
+                              <button type="button" class="btn btn-lg btn-info info-btn-style" onClick="" id="info_btn_3">
+                                  More Info
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        {% endif %}
+    {% endfor %}
+</div>
+
+{% else %}
+
+    <p class="label-text" style="font-size: 19px">None of your patients have done trainings yet</p>
+
+{% endif %}
+
+{% endblock %}

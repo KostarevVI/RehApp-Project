@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+
+{% block styles %}
+  <link rel="stylesheet" href="../static/css/style_login.css" type="text/css" />
+{% endblock %}
+
+{% block content %}
+
+<div class="modal fade" id="modalPassResForm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Password Reset</h5>
+      </div>
+      <form method="POST" class="needs-validation" id="pass_res_form_form" action="" novalidate>
+        {{ pass_res_form.csrf_token() }}
+        <div class="modal-body">
+          <div class="form-group">
+            {{ pass_res_form.password(type="password", class="form-control", id="pass_res_form_pass", placeholder="Enter New Password") }}
+            <div class="invalid-feedback" id="invalid_pass_res_pass">Please enter Password.</div>
+  <!--          <input type="password" class="form-control" id="req_pass" placeholder="Password">-->
+          </div>
+          <div class="form-group">
+            {{ pass_res_form.conf(type="password", class="form-control", id="pass_res_form_conf", placeholder="Confirm New Password") }}
+            <div class="invalid-feedback" id="invalid_pass_res_conf">Please repeat Password.</div>
+  <!--          <input type="password" class="form-control" id="req_conf_pass" placeholder="Confirm Password">-->
+          </div>
+        </div>
+        <div class="modal-footer mt-4">
+          {{ pass_res_form.submit4(type="submit", class="btn btn-success btn-lg d-block mx-auto mt-1 btn-green") }}
+  <!--        <button type="button" class="btn btn-success btn-lg d-block mx-auto">Sign Up</button>-->
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalPassRes" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Forgot your Password?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+      <form method="POST" class="needs-validation" id="pass_res_form" action="{{url_for('auth.pass_res_handler')}}" novalidate>
+        {{ pass_res.csrf_token() }}
+        <div class="modal-body">
+          <div class="form-group">
+              {{ pass_res.email(type="email", class="form-control", id="pass_res_email", placeholder="Enter Email of your account") }}
+              <div class="invalid-feedback" id="invalid_pass_res_email">Please enter valid Email.</div>
+  <!--            <input type="email" class="form-control" id="req_email" placeholder="Enter Email">-->
+          </div>
+        </div>
+        <div class="modal-footer mt-4">
+          {{ pass_res.submit3(type="submit", class="btn btn-lg d-block mx-auto mt-1 btn-green") }}
+  <!--        <button type="button" class="btn btn-success btn-lg d-block mx-auto">Sign Up</button>-->
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="modalRegister" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Sign Up</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="POST" class="needs-validation" id="req_form" action="{{url_for('auth.sign_up_handler')}}" novalidate>
+        {{ sign_up_form.csrf_token() }}
+        <div class="modal-body">
+            <div class="form-row align-items-center">
+              <div class="col-md-6">
+                {{ sign_up_form.first_name(type="text", class="form-control", id="req_first_name", placeholder="Enter First Name") }}
+                <div class="invalid-feedback" id="invalid_first_name">Please enter First Name.</div>
+  <!--          <input type="text" class="form-control" id="req_name" placeholder="Enter First Name">-->
+              </div>
+              <div class="col-md-6">
+                {{ sign_up_form.last_name(type="text", class="form-control", id="req_last_name", placeholder="Enter Last Name") }}
+                <div class="invalid-feedback" id="invalid_last_name">Please enter Last Name.</div>
+  <!--              <input type="text" class="form-control" id="req_surname" placeholder="Enter Last Name">-->
+              </div>
+            </div>
+            <div class="form-group">
+              {{ sign_up_form.email(type="email", class="form-control", id="req_email", placeholder="Enter Email") }}
+              <div class="invalid-feedback" id="invalid_email">Please enter valid Email.</div>
+  <!--            <input type="email" class="form-control" id="req_email" placeholder="Enter Email">-->
+            </div>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">+</span>
+                </div>
+                {{ sign_up_form.phone_num(type="text", class="form-control phone-style", id="req_phone", placeholder="Enter Phone Number") }}
+                <div class="invalid-feedback invalid-phone-style" id="invalid_phone_num">Please enter Phone Number without symbols.</div>
+    <!--        <input type="number" class="form-control" id="req_phone" placeholder="Enter Phone Number">-->
+              </div>
+
+            <div class="form-group">
+              {{ sign_up_form.password(type="password", class="form-control", id="req_pass", placeholder="Password") }}
+              <div class="invalid-feedback" id="invalid_req_pass">Please enter Password.</div>
+  <!--            <input type="password" class="form-control" id="req_pass" placeholder="Password">-->
+            </div>
+            <div class="form-group">
+              {{ sign_up_form.conf(type="password", class="form-control", id="req_conf_pass", placeholder="Confirm Password") }}
+              <div class="invalid-feedback" id="invalid_conf">Please repeat Password.</div>
+  <!--            <input type="password" class="form-control" id="req_conf_pass" placeholder="Confirm Password">-->
+            </div>
+            <div class="form-group">
+              {{ recaptcha_form.recaptcha(id="req_recaptcha") }}
+              {{ recaptcha_form.recaptcha_error(class="form-control", id="req_recaptcha_error")}}
+              <div class="invalid-feedback" id="invalid_recaptcha">Please complete ReCaptcha.</div>
+  <!--            <input type="password" class="form-control" id="req_conf_pass" placeholder="Confirm Password">-->
+            </div>
+
+
+        </div>
+        <div class="modal-footer mt-4">
+          {{ sign_up_form.submit2(type="submit", class="btn btn-success btn-lg d-block mx-auto mt-1") }}
+  <!--        <button type="button" class="btn btn-success btn-lg d-block mx-auto">Sign Up</button>-->
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="row" style="margin-top: 70px;">
+  <div class="col-md-6 text-center mt-5">
+    <img class="center-block" src="../static/img/rehapp_logo5.png" width="400" height="320">
+    <br>
+    <br>
+    <h4 class="text-center" >Web Application for Doctors</h4>
+  </div>
+  <div class="col-md-1">
+
+  </div>
+  <div class="col-md-4">
+    <br>
+    <br>
+    <form method="POST" class="shadow p-3 mb-5 bg-light rounded needs-validation" action="{{url_for('auth.login_handler')}}" novalidate>
+      {{ login_form.hidden_tag() }}
+      <h3 align="center">Login</h3>
+      <div class="form-group">
+        {{ login_form.email(type="text", class="form-control form-control-lg",
+           id="email", placeholder="Email")}}
+        <div class="invalid-feedback" id="invalid_login">Please enter Email Address.</div>
+<!--        <input-->
+<!--          type="email"-->
+<!--          class="form-control form-control-lg"-->
+<!--          id="email"-->
+<!--          name="email"-->
+<!--          placeholder="Email or Phone Number"-->
+<!--        />-->
+      </div>
+      <div class="form-group">
+        {{ login_form.password(type="password", class="form-control form-control-lg",
+           id="password", placeholder="Password") }}
+        <div class="invalid-feedback" id="invalid_pass">Please enter Password.</div>
+<!--        <input-->
+<!--          type="password"-->
+<!--          class="form-control form-control-lg"-->
+<!--          id="password"-->
+<!--          name="password"-->
+<!--          placeholder="Password"-->
+<!--        />-->
+      </div>
+
+      <div class="custom-control custom-checkbox">
+        {{ login_form.remember(type="checkbox", class="custom-control-input", id="customCheck1") }}
+        {{ login_form.remember.label(class="custom-control-label", for="customCheck1", style="color: black !important") }}
+<!--        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+<!--        <label class="custom-control-label" for="customCheck1">Remember Me</label>-->
+      </div>
+      {{ login_form.submit1(type="submit", class="btn btn-lg btn-block btn-green") }}
+<!--      <button type="submit" class="btn btn-primary btn-lg btn-block btn-green">Login</button>-->
+      <div class="text-center" id="forgot_pass">
+        <a data-toggle="modal" data-target="#modalPassRes" href="" style="color: #2cba9f">Forgot Password?</a>
+      </div>
+      <hr>
+      <button type="button" class="btn btn-success btn-lg d-block mx-auto" data-toggle="modal" data-target="#modalRegister">Create New Account</button>
+    </form>
+  </div>
+  <div class="col-md-1">
+    <!--Для красоты отступов-->
+  </div>
+</div>
+
+{% if is_pass_res %}
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#modalPassResForm').modal('show')
+});
+</script>
+{% endif %}
+
+{% endblock %}

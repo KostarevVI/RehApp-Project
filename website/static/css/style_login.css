@@ -1,0 +1,58 @@
+hr {
+    margin-top: 3px;
+    padding-top: 0px;
+}
+
+#forgot_pass {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.modal-body {
+    margin-top: 15px;
+    padding-top: 0px;
+    margin-bottom: 10px;
+    padding-bottom: 0px;
+}
+
+.form-group {
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.form-control {
+    position: relative;
+    margin-bottom: 0px;
+}
+
+.input-group {
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.phone-style {
+    border-radius: 0px 4px 4px 0px !important;
+}
+
+.invalid-phone-style {
+    height: 14px;
+    margin-top: 39px;
+    margin-bottom: 0px;
+}
+
+#req_recaptcha_error {
+    display:none;
+}
+
+.alert {
+    transform: translatey(-140%) !important;
+}
