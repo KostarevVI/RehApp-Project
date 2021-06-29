@@ -19,7 +19,8 @@ def dashboard():
     patients_with_trainings = \
         db.session.query(Training).join(Patient, Training.patient_id == Patient.id) \
             .join(PatientOfTherapist, PatientOfTherapist.patient_id == Patient.id) \
-            .filter(PatientOfTherapist.therapist_id == current_user.id).filter(Training.execution_date < datetime.now()) \
+            .filter(PatientOfTherapist.therapist_id == current_user.id)\
+            .filter(Training.execution_date < datetime.now()) \
             .filter(Training.execution_date > datetime.now() - timedelta(weeks=4)) \
             .order_by(Training.execution_date.desc()).all()
 
