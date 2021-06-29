@@ -19,11 +19,11 @@ def login(pass_res_token):
     if current_user.is_authenticated:
         return redirect(url_for('rehapp.dashboard'))
 
-    login_form = LoginForm()
-    sign_up_form = SignUpForm()
-    pass_res = PasswordReset()
-    pass_res_form = PasswordResetForm()
-    recaptcha_form = RecaptchaForm()
+    login_form = LoginForm(prefix="login_form")
+    sign_up_form = SignUpForm(prefix="sign_up_form")
+    pass_res = PasswordReset(prefix="pass_res")
+    pass_res_form = PasswordResetForm(prefix="pass_res_form")
+    recaptcha_form = RecaptchaForm(prefix="recaptcha_form")
 
     if pass_res_token and pass_res_token != '':
         therapist = Therapist.verify_token(pass_res_token)
@@ -59,7 +59,7 @@ def login_handler():
         else:
             return redirect(url_for('auth.login'))
 
-    login_form = LoginForm()
+    login_form = LoginForm(prefix="login_form")
 
     if login_form.validate_on_submit():
 
@@ -73,7 +73,7 @@ def login_handler():
                 flash('Your Account is not Verified. Please Check your Email for Confirmation Link. Sign Up again if it\'s invalid.', category='warning')  # ????????????????????????????
                 return redirect(url_for('auth.login'))
         else:
-            flash("Invalid Email/Phone or Password.", "error")
+            flash("Invalid Email and Password combination.", "error")
 
     return redirect(url_for('auth.login'))
 
@@ -88,7 +88,7 @@ def sign_up_handler():
         else:
             return redirect(url_for('auth.login'))
 
-    sign_up_form = SignUpForm()
+    sign_up_form = SignUpForm(prefix="sign_up_form")
 
     print('Trying to validate')
     print(sign_up_form.errors)
@@ -145,8 +145,8 @@ def recaptcha_verify_handler():
         else:
             return redirect(url_for('auth.login'))
 
-    sign_up_form = SignUpForm
-    recaptcha_form = RecaptchaForm()
+    sign_up_form = SignUpForm(prefix="sign_up_form")
+    recaptcha_form = RecaptchaForm(prefix="recaptcha_form")
 
     print('Trying to validate')
     if not recaptcha_form.recaptcha.validate(form=sign_up_form):
@@ -167,10 +167,11 @@ def pass_res_handler():
         else:
             return redirect(url_for('auth.login'))
 
-    pass_res = PasswordReset()
+    pass_res = PasswordReset(prefix="pass_res")
 
     if pass_res.validate_on_submit():
         therapist = Therapist.query.filter_by(email=pass_res.email.data).first()
+        print(therapist.id)
         if therapist and therapist.is_verified:
             send_reset_email(therapist)
         flash('Password Reset Link has been Sent to your Email If your Account Exists and is Verified.', "success")
@@ -189,6 +190,7 @@ def verify_account_handler(token):
         return redirect(url_for('rehapp.dashboard'))
 
     therapist = Therapist.verify_token(token)
+    print(therapist.id)
     if therapist is None:
         flash('Link that you used is Invalid or Expired. Please Sign Up again to get a new one.', 'error')
         return redirect(url_for('auth.login'))
@@ -254,6 +256,7 @@ def accept_invitation_handler(token):
                                                      angle_from=token_info[2],
                                                      angle_to=token_info[3],
                                                      affected_side=token_info[4])
+            patients_sign_up_params.therapist_id.data = token_info[0]
 
             return render_template('patients_sign_up.html', patients_sign_up=patients_sign_up_params,
                                    today=datetime.date.today(), message=None)
@@ -333,7 +336,7 @@ def accept_invitation_handler(token):
 @auth.route('/patients_sign_up', methods=['GET', 'POST'])
 def patients_sign_up_handler():
     patients_sign_up = PatientsSignUp()
-
+    print(patients_sign_up.therapist_id.data + ' ' + patients_sign_up.angle_from.data + ' ' + patients_sign_up.password.data)
     if patients_sign_up.validate_on_submit():
         pass_hash = generate_password_hash(patients_sign_up.password.data)
         phone_num = '+' + str(patients_sign_up.phone_num.data).translate(str.maketrans('', '', '-+. '))

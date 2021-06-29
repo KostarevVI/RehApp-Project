@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}
-  My Patients
-{% endblock %}
 
 {% block styles %}
   <link rel="stylesheet" href="../static/css/style_patients.css" type="text/css" />
+{% endblock %}
+
+{% block scripts %}
+  <script type="text/javascript" src="{{ url_for('static', filename='js/patients.js')}}"></script>
 {% endblock %}
 
 {% block content %}
@@ -21,6 +22,7 @@
         </button>
       </div>
       <form method="POST" class="needs-validation" id="patient_info_form" action="{{url_for('rehapp.patient_info_handler')}}" novalidate>
+        {{ patient_info_change.csrf_token() }}
         <div class="modal-body p-0">
           <div class="overflow-auto" id="overflow_info">
             <h6 class="mb-0">Personal Info</h6>
@@ -28,29 +30,29 @@
             <div class="form-row form-group align-items-center">
               <div class="col-md-6">
                 <label for="pi_first_name" class="small text-muted">First name</label>
-                <input type="text" class="form-control patient-info-disabled" id="pi_first_name" value="Not Stated">
+                <input type="text" class="form-control-plaintext patient-info-disabled" id="pi_first_name" value="Not Stated">
               </div>
               <div class="col-md-6">
                 <label for="pi_last_name" class="small text-muted">Last name</label>
-                <input type="text" class="form-control patient-info-disabled" id="pi_last_name" value="Not Stated">
+                <input type="text" class="form-control-plaintext patient-info-disabled" id="pi_last_name" value="Not Stated">
               </div>
             </div>
             <div class="form-group">
               <label for="pi_email" class="small text-muted">Email</label>
-              <input type="text" class="form-control patient-info-disabled" id="pi_email" value="Not Stated">
+              <input type="text" class="form-control-plaintext patient-info-disabled" id="pi_email" value="Not Stated">
             </div>
             <div class="form-group">
               <label for="pi_phone" class="small text-muted">Phone Number</label>
-              <input type="text" class="form-control patient-info-disabled" id="pi_phone" value="Not Stated">
+              <input type="text" class="form-control-plaintext patient-info-disabled" id="pi_phone" value="Not Stated">
             </div>
             <div class="form-row form-group align-items-center">
               <div class="col-md-6">
                 <label for="pi_sex" class="small text-muted">Gender type</label>
-                <input type="text" class="form-control patient-info-disabled" id="pi_sex" value="Not Stated">
+                <input type="text" class="form-control-plaintext patient-info-disabled" id="pi_sex" value="Not Stated">
               </div>
               <div class="col-md-6">
                 <label for="pi_birth_date" class="small text-muted">Date of Birth</label>
-                <input type="text" class="form-control patient-info-disabled" id="pi_birth_date" value="Not Stated">
+                <input type="text" class="form-control-plaintext patient-info-disabled" id="pi_birth_date" value="Not Stated">
               </div>
             </div>
             <h6 class="mb-0 mt-3">Health Info</h6>
@@ -58,18 +60,19 @@
             <div class="form-row form-group align-items-center" id="angle_info_bar">
               <div class="col-md-4">
                 <label for="pi_affected_side" class="small text-muted">Affected Side</label>
-                <input type="text" class="form-control patient-info-disabled" id="pi_affected_side" value="Not Stated" placeholder="">
-                {{ patient_info_change.affected_side(class="form-control angle-edit", id="select_affected_side_info") }}
+                <input type="text" class="form-control-plaintext patient-info-disabled" id="pi_affected_side" value="Not Stated" placeholder="">
+                {{ patient_info_change.affected_side(class="form-control angle-edit", id="select_affected_side_info", required=true) }}
+                <div class="invalid-feedback" id="invalid_affected_side_info">Select Side.</div>
               </div>
               <div class="col-md-4">
                 <label for="pi_angle_from" class="small text-muted">From Angle</label>
-                <input type="text" class="form-control patient-info-disabled" id="pi_angle_from" value="Not Stated" placeholder="Enter Value">
+                <input type="text" class="form-control-plaintext patient-info-disabled" id="pi_angle_from" value="Not Stated" placeholder="Enter Value">
                 {{ patient_info_change.angle_from(type="text", class="form-control angle-edit", id="angle_from_info", value="") }}
                 <div class="invalid-feedback" id="invalid_angle_from_info">Enter Value.</div>
               </div>
               <div class="col-md-4">
                 <label for="pi_angle_to" class="small text-muted">To Angle</label>
-                <input type="text" class="form-control patient-info-disabled" id="pi_angle_to" value="Not Stated" placeholder="Enter Value">
+                <input type="text" class="form-control-plaintext patient-info-disabled" id="pi_angle_to" value="Not Stated" placeholder="Enter Value">
                 {{ patient_info_change.angle_to(type="text", class="form-control angle-edit", id="angle_to_info", value="") }}
                 <div class="invalid-feedback" id="invalid_angle_to_info">Enter Value.</div>
               </div>
@@ -77,11 +80,11 @@
           </div>
         </div>
         <div class="modal-footer">
-          <div class="col-md-12">
+          <div class="col-md-12" id="div_edit_info">
             <button type="button" class="btn btn-green btn-md d-block mx-auto" id="btn_edit_info">Edit Health Info</button>
           </div>
-            <div class="mx-auto" id="change_info_bar">
-                <button type="button" class="btn btn-outline-secondary btn-md d-block-inline">Cancel</button>
+            <div class="mx-auto m-1" id="change_info_bar">
+                <button type="button" class="btn btn-outline-secondary btn-md d-block-inline" id="btn_cancel_info">Cancel</button>
                 {{ patient_info_change.submit7(type="submit", class="btn btn-success btn-md d-block-inline", id="btn_save_info") }}
 <!--                <button type="button" class="btn btn-success btn-md d-block-inline">Save</button>-->
             </div>
@@ -135,7 +138,7 @@
               <div class="invalid-feedback" id="invalid_angle_to">Enter Value.</div>
             </div>
           </div>
-          {{ invite_patient.note(class="form-control mt-4 mx-auto", id="textfield_note", placeholder="Write Note for Patient") }}
+          {{ invite_patient.note(class="form-control mt-4 mx-auto", id="textfield_note", rows=6, placeholder="Write a Note for Patient") }}
         </div>
         <div class="modal-footer">
           {{ invite_patient.submit5(type="submit", class="btn btn-success btn-lg d-block mx-auto mt-1 btn-green") }}
@@ -169,14 +172,14 @@
                       <p class="card-subtitle"><small class="text-muted">ID:{{pot.id}}</small></p>
                       <div class="row g-0">
                           <div class="col-md-4">
-                              <p class="card-text m-0">Affected Side: {%if pot.affected_side == None%}Not Stated{%else%}{{pot.affected_side}}{%endif%}</p>
-                              <p class="card-text m-0">Mobility Angle: {%if pot.angle_limit_from == None or pot.angle_limit_to == None%}Not Stated {%else%}{{pot.angle_limit_from}} - {{pot.angle_limit_to}}{%endif%}</p>
+                              <p class="card-text m-0" id="side_{{pot.id}}">Affected Side: {%if pot.affected_side == None%}Not Stated{%else%}{{pot.affected_side}}{%endif%}</p>
+                              <p class="card-text m-0" id="angle_{{pot.id}}">Mobility Angle: {%if pot.angle_limit_from == None or pot.angle_limit_to == None%}Not Stated {%else%}{{pot.angle_limit_from}} - {{pot.angle_limit_to}}{%endif%}</p>
                           </div>
                           <div class="col-md-4 pl-4">
                               <p class="card-text m-0">Last Action: {{pot.update_date.strftime('%Y-%m-%d %H:%M')}}</p>
                           </div>
                           <div class="col-md-4 text-center btn-pot-style">
-                              <button type="button" class="btn  btn-info btn-more-info" data-toggle="modal" data-target="#modalPatientInfo" id="btn_pat_info_{{pot.id}}" value={{pot.id}}>
+                              <button type="button" class="btn  btn-info btn-more-info" data-toggle="modal" data-target="#modalPatientInfo" id="btn_pat_info_{{pot.id}}" data-value={{pot.id}}>
                                   More Info
                               </button>
                               <br>
@@ -198,7 +201,8 @@
 
 {% else %}
 
-    <p class="label-text" style="font-size: 19px">None of your patients have done trainings yet</p>
+    <p class="label-text ml-2 pl-1" style="font-size: 19px">You don't have Patients yet. Invite them using the Button below.</p>
+    <button type="button" class="btn btn-success btn-lg pull-right" data-toggle="modal" data-target="#modalInvitePatient" style="margin-top:500px;"> Invite new Patient</button>
 
 {% endif %}
 

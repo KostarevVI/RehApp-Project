@@ -5,6 +5,10 @@
   <link rel="stylesheet" href="../static/css/style_login.css" type="text/css" />
 {% endblock %}
 
+{% block scripts %}
+  <script type="text/javascript" src="{{ url_for('static', filename='js/login.js')}}"></script>
+{% endblock %}
+
 {% block content %}
 
 <div class="modal fade" id="modalPassResForm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="modalLabel" aria-hidden="true">

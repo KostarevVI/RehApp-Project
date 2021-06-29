@@ -1,27 +1,42 @@
-{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content %}
-<form method="POST">
-  <h3 align="center">Login</h3>
-  <div class="form-group">
-    <label for="email">Email Address</label>
-    <input
-      type="email"
-      class="form-control"
-      id="email"
-      name="email"
-      placeholder="Enter email"
-    />
+{% extends "base.html" %}
+
+
+{% block styles %}
+    <link href='../static/fullcalendar/main.css' rel='stylesheet' />
+    <link href='../static/css/style_schedule.css' rel='stylesheet' />
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='fullcalendar/main.js')}}"></script>
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth'
+        });
+        calendar.render();
+      });
+
+    </script>{% endblock %}
+
+    <script src="{{ url_for('static', filename='static/schedule.js')}}"></script>
+
+{% block content %}
+<div class="row">
+  <div class="col-md-7 mt-5">
+    <div id='calendar'></div>
   </div>
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input
-      type="password"
-      class="form-control"
-      id="password"
-      name="password"
-      placeholder="Enter password"
-    />
+  <div class="col-md-5 mt-5">
+    <div class="form-group col-md-12" style="margin-bottom:11px;">
+      <h3 class="mt-1">
+        <label for="overflow_exercises" class="">Exercises in Training</label>
+      </h3>
+      <div class="overflow-auto mt-1" id="overflow_exercises">
+
+      </div>
+    </div>
   </div>
-  <br />
-  <button type="submit" class="btn btn-primary">Login</button>
-</form>
+</div>
+
 {% endblock %}

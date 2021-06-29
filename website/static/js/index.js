@@ -1,37 +1,4 @@
-function deletePerson(personId) {
-  fetch("/delete-person", {
-    method: "POST",
-    body: JSON.stringify({ personId: personId }),
-  }).then((_res) => {
-    window.location.href = "/";
-  });
-};
-
-
-function playPerson(playPersonId) {
-  fetch("/play-person", {
-    method: "POST",
-    body: JSON.stringify({ playPersonId: playPersonId }),
-  }).then((_res) => {
-    window.location.href = "/play";
-  });
-};
-
-
-function inventorySelect() {
-  var perInv1 = $("#inventoriesSelect1 option:selected").val();
-  var perInv2 = $("#inventoriesSelect2 option:selected").val();
-  fetch("/inventory-select", {
-    method: "POST",
-    body: JSON.stringify({ perInv1: perInv1,
-                           perInv2: perInv2 }),
-  }).then((_res) => {
-    window.location.href = "/inventory";
-  });
-};
-
-
-// Example starter JavaScript for disabling form submissions if there are invalid fields
+// Disabling form submissions if there are invalid fields
 (function() {
   'use strict';
 
@@ -51,13 +18,35 @@ function inventorySelect() {
   }, false);
 })();
 
-//function createPerson() {
-//
-//  fetch("/create-person", {
-//    method: "POST",
-//    body: JSON.stringify({ selectedClass: selectedClass }),
-//  }).then((_res) => {
-//    window.location.href = "/";
-//  });
-//  alert(selectedClass);
-//}
+
+// All modal windows Validation func
+$(document).ready(function () {
+    $('.edit-modal-opener').click(function () {
+        var url = $(this).data('whatever');
+        $.get(url, function (data) {
+            $('#Modal .modal-content').html(data);
+            $('#Modal').modal();
+            $('#submit').click(function (event) {
+                event.preventDefault();
+                $.post(url, data = $('#ModalForm').serialize(), function (
+                    data) {
+                    if (data.status == 'ok') {
+                        $('#Modal').modal('hide');
+                        location.reload();
+                    } else {
+                        var obj = JSON.parse(data);
+                        for (var key in obj) {
+                            if (obj.hasOwnProperty(key)) {
+                                var value = obj[key];
+                            }
+                        }
+                        $('.help-block').remove()
+                        $('<p class="help-block">' + value + '</p>')
+                            .insertAfter('#' + key);
+                        $('.form-group').addClass('has-error')
+                    }
+                })
+            });
+        })
+    });
+});

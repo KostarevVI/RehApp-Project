@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import (StringField, PasswordField, BooleanField,
                      SubmitField, IntegerField, SelectField,
-                     TextAreaField, DateField)
-from wtforms.validators import InputRequired, Email, Length, EqualTo, ValidationError
+                     TextAreaField, DateField, RadioField,
+                     TimeField)
+from wtforms.validators import InputRequired, Email, Length, EqualTo, ValidationError, NumberRange
 from website.models import *
 
 
@@ -21,7 +22,7 @@ class SignUpForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired(), Email(message='Email Address does Not Exists.',
                                                                     check_deliverability='True')])
     phone_num = StringField('Phone Number', validators=[InputRequired(), Length(message='Phone Number is too long.',
-                                                                                 max=20)])
+                                                                                max=20)])
     password = PasswordField('Password', validators=[InputRequired(),
                                                      Length(message='Password must be between 8 and 80 characters long.'
                                                             , min=8
@@ -63,7 +64,7 @@ class InvitePatient(FlaskForm):
     angle_from = IntegerField('Angle From')
     angle_to = IntegerField('Angle To')
     affected_side = SelectField("Affected side", choices=[('left', "Left"), ('right', 'Right'), ('both', 'Both')],
-                                default=1)
+                                default='left')
     note = TextAreaField('Note', render_kw={"rows": 3})
     submit5 = SubmitField('Send Invitation')
 
@@ -78,7 +79,7 @@ class PatientsSignUp(FlaskForm):
     phone_num = StringField('Phone Number', validators=[InputRequired(), Length(message='Phone Number is too long.',
                                                                                 max=20)])
     sex = SelectField("Sex", choices=[('male', "Male"), ('female', 'Female'), ('custom', 'Custom')],
-                      default=1)
+                      default='male')
     birth_date = DateField('Birth Date', format='%Y-%m-%d', validators=[InputRequired()])
     password = PasswordField('Password', validators=[InputRequired(),
                                                      Length(message='Password must be between 8 and 80 characters long.'
@@ -110,7 +111,35 @@ class PatientInfoChange(FlaskForm):
     angle_from = IntegerField('Angle From')
     angle_to = IntegerField('Angle To')
     affected_side = SelectField("Affected side", choices=[('left', "Left"), ('right', 'Right'), ('both', 'Both')],
-                                default=1)
+                                default='left')
     submit7 = SubmitField('Save')
+
+
+class TrainingForm(FlaskForm):
+    patient_id = SelectField('Select Patient', choices=[], coerce=int, validators=[InputRequired()])
+    training_description = TextAreaField("Description")
+    training_date = DateField('Training Date', format='%Y-%m-%d', validators=[InputRequired()])
+    submit8 = SubmitField('Send Training')
+
+
+class ExerciseForm(FlaskForm):
+    type = RadioField('Training Type', choices=[('passive', 'Passive'), ('active', 'Active')], default='passive')
+    involvement = SelectField('Select Involvement', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'),
+                                                             ('5', '5'), ('6', '6'), ('7', '7'), ('8', '8'),
+                                                             ('9', '9'), ('10', '10')], default='1')
+    timeout = SelectField('', choices=[('00:00:05', '5 sec.'), ('00:00:10', '10 sec.'), ('00:00:15', '15 sec.'),
+                                       ('00:00:20', '20 sec.'), ('00:00:25', '25 sec.'), ('00:00:30', '30 sec.')],
+                          default='00:00:15')
+    speed = SelectField('Select Speed', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'),
+                                                 ('6', '6'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10')],
+                        default='1', validators=[InputRequired()])
+    angle_from = IntegerField('Angle From', validators=[InputRequired(), NumberRange(min=0, max=135)])
+    angle_to = IntegerField('Angle To', validators=[InputRequired(), NumberRange(min=0, max=135)])
+    repetitions = IntegerField('Repetitions', validators=[InputRequired(), NumberRange(min=1, max=50)])
+    spasms_stop_value = SelectField('Spasms Stop Value', choices=[('0', 'None (set Angle)'), ('1', '1'), ('2', '2'),
+                                                                  ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'),
+                                                                  ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10')])
+    duration = TimeField('Duration', format='%M:%S', validators=[InputRequired()])
+    submit9 = SubmitField('Add Exercise')
 
 

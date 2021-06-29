@@ -77,3 +77,9 @@ input{
     background-color: #e9f0fe;
     color: #212529;
 }
+
+.form-control-plaintext {
+    padding-left: 13px;
+    margin-top: 0px;
+    padding-bottom:4px;
+}

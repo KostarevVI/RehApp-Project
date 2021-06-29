@@ -5,8 +5,19 @@ from sqlalchemy.orm import relationship
 from .__name__ import db, app
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer
+from sqlalchemy.inspection import inspect
 
 metadata = db.metadata
+
+
+class Serializer(object):
+
+    def serialize(self):
+        return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+
+    @staticmethod
+    def serialize_list(l):
+        return [m.serialize() for m in l]
 
 
 class Patient(db.Model):
@@ -22,13 +33,13 @@ class Patient(db.Model):
     )
 
     id = Column(Integer, primary_key=True, server_default=text("nextval('patient_id_seq'::regclass)"))
-    password = Column(String(255))
-    first_name = Column(String(30))
-    last_name = Column(String(30))
+    password = Column(String(255), nullable=False)
+    first_name = Column(String(30), nullable=False)
+    last_name = Column(String(30), nullable=False)
     email = Column(String(50), nullable=False, unique=True)
     phone_num = Column(String(20), nullable=False)
-    sex = Column(Enum('male', 'female', 'custom', name='sex_type'))
-    birth_date = Column(Date)
+    sex = Column(Enum('male', 'female', 'custom', name='sex_type'), nullable=False)
+    birth_date = Column(Date, nullable=False)
     update_date = Column(DateTime, nullable=False, server_default=text("now()"))
     affected_side = Column(Enum('left', 'right', 'both', name='affected_type'))
     angle_limit_from = Column(SmallInteger)
@@ -101,7 +112,7 @@ class Therapist(db.Model, UserMixin):
     )
 
     id = Column(Integer, primary_key=True, server_default=text("nextval('therapist_id_seq'::regclass)"))
-    password = Column(String(255))
+    password = Column(String(255), nullable=False)
     first_name = Column(String(30), nullable=False)
     last_name = Column(String(30), nullable=False)
     email = Column(String(50), nullable=False, unique=True)
@@ -140,7 +151,7 @@ class PatientOfTherapist(db.Model):
     therapist = relationship('Therapist')
 
 
-class Training(db.Model):
+class Training(db.Model, Serializer):
     __tablename__ = 'training'
     __table_args__ = (
         CheckConstraint("(assigned_by)::text <> ''::text"),
@@ -160,24 +171,40 @@ class Training(db.Model):
 
     patient = relationship('Patient')
 
+    def serialize(self):
+        d = Serializer.serialize(self)
+        del d['patient_id']
+        return d
 
-class Exercise(db.Model):
+
+class Exercise(db.Model, Serializer):
     __tablename__ = 'exercise'
+    __table_args__ = (
+        CheckConstraint('(involvement_threshold > 0) AND (involvement_threshold <= 10)'),
+        CheckConstraint('(repetitions > 0) AND (repetitions <= 50)'),
+        CheckConstraint('(spasms_stop_value <= 10) AND (spasms_stop_value >= 0)'),
+        CheckConstraint('(speed > 0) AND (speed <= 10)')
+    )
 
     id = Column(Integer, primary_key=True, server_default=text("nextval('exercise_id_seq'::regclass)"))
     training_id = Column(ForeignKey('training.id', ondelete='CASCADE'))
     order_in_training = Column(Integer, nullable=False)
-    type = Column(Enum('passive', 'active', 'game', name='exercise_type'), nullable=False)
+    type = Column(Enum('passive', 'active', name='exercise_type'), nullable=False)
     speed = Column(SmallInteger, nullable=False)
     angle_limit_from = Column(SmallInteger, nullable=False)
     angle_limit_to = Column(SmallInteger, nullable=False)
-    involvement_threshold = Column(SmallInteger)
-    duration = Column(Time)
-    repetitions = Column(Integer)
+    repetitions = Column(Integer, nullable=False)
     spasms_stop_value = Column(Integer, nullable=False, server_default=text("0"))
+    involvement_threshold = Column(SmallInteger)
+    repetition_timeout = Column(Time)
+    duration = Column(Time)
     spasms_count = Column(Integer)
 
     training = relationship('Training')
+
+    def serialize(self):
+        d = Serializer.serialize(self)
+        return d
 
 
 class ExerciseGraph(db.Model):

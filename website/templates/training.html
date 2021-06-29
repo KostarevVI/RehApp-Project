@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+
+{% block styles %}
+    <link rel="stylesheet" href="../static/css/style_training.css" type="text/css" />
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/training.js')}}"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <p>Here you can Create New Training and Send it to Patient</p>
+</div>
+
+<hr>
+
+{% if patients_of_therapist %}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="">
+            <h5 class="mb-0 pl-2">Training</h5>
+            <hr class="mt-0 mb-2">
+        </div>
+        <form method="POST" class="needs-validation" id="training_form" novalidate>
+            <div class="form-row mx-1">
+                <div class="form-group col-md-6">
+                    <label for="select_patient" class="small text-muted">Select Patient</label>
+                    {{ training_form.patient_id(class="form-control", id="select_patient", required=true) }}
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="training_date" class="small text-muted">Choose Date</label>
+                    {{ training_form.training_date(type="date", class="form-control", id="training_date", min=today, max="2100-01-01", value=today, required=true)}}
+                    <div class="invalid-feedback" id="invalid_training_date">Enter date of training.</div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="training_date" class="small text-muted">Description</label>
+                    {{ training_form.training_description(class="form-control", id="training_description", rows=4)}}
+                </div>
+            </div>
+        </form>
+
+
+        <div class="">
+            <h5 class="mb-0 pl-2">Exercise</h5>
+            <hr class="mt-0 mb-2">
+        </div>
+        <form method="POST" class="needs-validation" id="exercise_form" novalidate>
+            <div class="form-row mx-1">
+                <div class="form-group col-md-4">
+                    <label for="type_buttons" class="small text-muted">Type</label>
+                    <div class="btn-group-toggle" id="type_buttons" data-toggle="buttons">
+                        {% for subfield in exercise_form.type%}
+                            <label id="btn_{{subfield.label.text}}" class="btn {%if subfield.label.text == 'Passive' %} btn-outline-info active btn-type{%else%} btn-type btn-outline-warning {%endif%}">
+                                {{subfield(autocomplete="off")}} {{subfield.label}}
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <div id="involvement_block" style="display: none">
+                        <label for="select_involvement" class="small text-muted">Involvement</label>
+                        {{ exercise_form.involvement(class="form-control", id="select_involvement", required=true) }}
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <div id="timeout_block" style="display: none">
+                        <label for="select_timeout" class="small text-muted">Timeout</label>
+                        {{ exercise_form.timeout(class="form-control", id="select_timeout", required=true) }}
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="select_speed" class="small text-muted">Speed</label>
+                    {{ exercise_form.speed(class="form-control", id="select_speed", required=true) }}
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="angle_from" class="small text-muted">From Angle</label>
+                    {{ exercise_form.angle_from(class="form-control", placeholder="Enter Angle", id="angle_from")}}
+                    <div class="invalid-feedback" id="invalid_angle_from">Angle must be from 0 to 135.</div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="angle_to" class="small text-muted">To Angle</label>
+                    {{ exercise_form.angle_to(class="form-control", placeholder="Enter Value", id="angle_to")}}
+                    <div class="invalid-feedback" id="invalid_angle_to">Angle must be from 0 to 135.</div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="spasms_stop_value" class="small text-muted">Spasms Stop Value</label>
+                    {{ exercise_form.spasms_stop_value(class="form-control", id="spasms_stop_value", required=true) }}
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="repetitions" class="small text-muted">Reps</label>
+                    {{ exercise_form.repetitions(class="form-control", id="repetitions", placeholder="Enter Reps", required=true, autocomplete="off") }}
+                    <div class="invalid-feedback" id="invalid_repetitions">Reps must be from 1 to 50.</div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="duration" class="small text-muted">Estimated Duration</label>
+                    {{ exercise_form.duration(class="form-control-plaintext pl-2 ml-1", id="duration", readonly=true, value="00:00")}}
+                </div>
+                <div class="form-group col-md-12 text-center">
+                    {{ exercise_form.submit9(type="submit", class="btn btn-passive btn-lg mt-3", id="btn_add_exercise") }}
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <div class="form-row">
+            <div class="col-md-6">
+                <h5 class="mb-0 pl-2">Passive Exercises</h5>
+                <hr class="mt-0 mb-2">
+            </div>
+            <div class="col-md-6">
+                <h5 class="mb-0 pl-2">Active Exercises</h5>
+                <hr class="mt-0 mb-2">
+            </div>
+        </div>
+        <div class="form-row mx-1">
+            <div class="col-md-6 form-row" id="total_pass_block">
+                <div class="form-group col-md-4">
+                    <label for="total_pass_exercises" class="small text-muted">Amount</label>
+                    <input type="text" readonly class="form-control-plaintext" id="total_pass_exercises" value="0">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="total_pass_reps" class="small text-muted">Reps</label>
+                    <input type="text" readonly class="form-control-plaintext" id="total_pass_reps" value="0">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="total_pass_duration" class="small text-muted">Duration</label>
+                    <input type="text" readonly class="form-control-plaintext" id="total_pass_duration" value="00:00">
+                </div>
+            </div>
+            <div class="col-md-6 form-row" style="margin-left:15px" id="total_act_block">
+                <div class="form-group col-md-4">
+                    <label for="total_act_exercises" class="small text-muted">Amount</label>
+                    <input type="text" readonly class="form-control-plaintext" id="total_act_exercises" value="0">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="total_act_reps" class="small text-muted">Reps</label>
+                    <input type="text" readonly class="form-control-plaintext" id="total_act_reps" value="0">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="total_act_duration" class="small text-muted">Duration</label>
+                    <input type="text" readonly class="form-control-plaintext" id="total_act_duration" value="00:00">
+                </div>
+            </div>
+        </div>
+        <div class="form-row mx-1">
+            <div class="form-group col-md-12" style="margin-bottom:11px;">
+                <label for="overflow_exercises" class="small text-muted">Exercises in Training</label>
+                <div class="overflow-auto" id="overflow_exercises">
+
+                </div>
+            </div>
+        </div>
+
+        <hr class="mt-0 mb-2 mx-1">
+        <div class="form-row mx-1" style="margin-top:0px;">
+            <div class="col-md-4 form-row" id="total_block_1">
+
+            </div>
+            <div class="col-md-4 form-row" id="total_block_">
+                <div class="form-group col-md-12">
+                    <h4 class="mb-0 pl-4" align="right"><br>In Total:</h4>
+                </div>
+            </div>
+            <div class="col-md-4 form-row mr-1" style="margin-left:15px" id="total_block_2">
+                <div class="form-group col-md-4">
+                    <label for="total_act_exercises" class="small text-muted">Exercises</label>
+                    <input type="text" readonly class="form-control-plaintext" id="total_exercises" value="0">
+                </div>
+                <div class="form-group col-md-4 pl-3">
+                    <label for="total_act_reps" class="small text-muted">Reps</label>
+                    <input type="text" readonly class="form-control-plaintext" id="total_reps" value="0">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="total_act_duration" class="small text-muted">Duration</label>
+                    <input type="text" readonly class="form-control-plaintext" id="total_duration" value="00:00">
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-12 text-center">
+            {{ training_form.submit8(type="submit", class="btn btn-success btn-lg", form="training_form", id="btn_send_training", style="margin-top:11px") }}
+<!--            <button type="button" class="btn btn-success btn-lg" id="btn_send_training" style="margin-top:11px">Send Training</button>-->
+        </div>
+    </div>
+
+</div>
+
+{% else %}
+
+ <p class="label-text ml-2 pl-1" style="font-size: 19px">You don't have Patients to Create Trainings for. Go to Patients Page to Invite them.</p>
+
+{% endif %}
+
+
+{% endblock %}

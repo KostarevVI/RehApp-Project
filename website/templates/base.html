@@ -39,11 +39,21 @@
 
     <script src="http://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 
-    <script type="text/javascript"
-            src="{{ url_for('static', filename='js/jquery_scripts.js')}}"></script>
-    <script
-            type="text/javascript"
-            src="{{ url_for('static', filename='js/index.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/index.js')}}"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/date.js')}}"></script>
+
+    <script type="text/javascript">
+    var csrf_token = "{{ csrf_token() }}";
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrf_token);
+            }
+        }
+    });
+    </script>
 
 
     <title>
@@ -55,6 +65,10 @@
     </title>
 
     {% block styles %}
+
+    {% endblock %}
+
+    {% block scripts %}
 
     {% endblock %}
 
@@ -175,7 +189,5 @@
 
     </div>
   </body>
-
-
 </html>
 
