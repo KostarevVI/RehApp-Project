@@ -15,26 +15,37 @@ class LoginForm(FlaskForm):
 
 
 class SignUpForm(FlaskForm):
-    first_name = StringField('First Name', validators=[InputRequired(), Length(message='First Name is too long.',
-                                                                               max=30)])
-    last_name = StringField('Last Name', validators=[InputRequired(), Length(message='Last Name is too long.',
-                                                                             max=30)])
-    email = StringField('Email', validators=[InputRequired(), Email(message='Email Address does Not Exists.',
-                                                                    check_deliverability='True')])
-    phone_num = StringField('Phone Number', validators=[InputRequired(), Length(message='Phone Number is too long.',
-                                                                                max=20)])
-    password = PasswordField('Password', validators=[InputRequired(),
-                                                     Length(message='Password must be between 8 and 80 characters long.'
-                                                            , min=8
-                                                            , max=80),
-                                                     EqualTo('conf', message='Passwords must match.')])
+    first_name = StringField('First Name',
+                             validators=[InputRequired(),
+                                         Length(message='First Name is too long.',
+                                                max=30)])
+    last_name = StringField('Last Name',
+                            validators=[InputRequired(),
+                                        Length(message='Last Name is too long.',
+                                               max=30)])
+    email = StringField('Email',
+                        validators=[InputRequired(),
+                                    Email(message='Email Address does Not Exists.',
+                                          check_deliverability='True')])
+    phone_num = StringField('Phone Number',
+                            validators=[InputRequired(),
+                                        Length(message='Phone Number is too long.',
+                                               max=20)])
+    password = \
+        PasswordField('Password',
+                      validators=[InputRequired(),
+                                  Length(message='Password must be between 8 and 80 characters long.',
+                                         min=8,
+                                         max=80),
+                                  EqualTo('conf', message='Passwords must match.')])
     conf = PasswordField('Confirm Password', validators=[InputRequired()])
     submit2 = SubmitField('Sign Up')
 
     def validate_email(self, email):
         user = Therapist.query.filter_by(email=email.data, is_verified=True).first()
         if user:
-            raise ValidationError('Account with this Email already Exists. Please Sign Up with another Email.')
+            raise ValidationError('Account with this Email already Exists. '
+                                  'Please Sign Up with another Email.')
 
 
 class RecaptchaForm(FlaskForm):
@@ -141,5 +152,3 @@ class ExerciseForm(FlaskForm):
                                                                   ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10')])
     duration = TimeField('Duration', format='%M:%S', validators=[InputRequired()])
     submit9 = SubmitField('Add Exercise')
-
-

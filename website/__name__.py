@@ -28,15 +28,9 @@ app.config['RECAPTCHA_PRIVATE_KEY'] = config.get("Settings", "captcha_private",
 app.config['RECAPTCHA_PUBLIC_KEY'] = config.get("Settings", "captcha_public",
                                                 fallback="No such thing as captcha_public")
 
-app.config['TESTING'] = False
+app.config['TESTING'] = False  # если true – капча всегда будет введённой
 mail = Mail(app)
 csrf = CSRFProtect(app)
-
-
-# export EMAIL_USER="rehapp.project@gmail.com"
-# export EMAIL_PASS="mvstyEz0pklICbR&z!9D"
-# export APP_SECRET_KEY=";ofija839P(#*J#@P89JFP#(*JppPJI@PE* pJ p8J QP(@*Jp9e28jF))DA.?????/dS?"
-# export DATABASE_URL="postgresql+psycopg2://postgres:6559@localhost/rehapp_database"
 
 
 def create_app():
