@@ -43,25 +43,34 @@ def patient_training_handler():
     if request.method == 'POST':
         return 'Go away!'
 
-    token = request.headers['authorization']
-    print(token)
+    try:
+        token = request.headers['authorization']
+    except:
+        return Response("{'message':'User token is required.'}", status=400, mimetype='application/json')
 
     patient = Patient.verify_token(token)
-    print(patient.id)
 
     if patient:
         training = db.session.query(Training).filter(and_(Training.patient_id == patient.id,
                                                       Training.execution_date == None,
                                                       Training.training_date <= date.today())).first()
-
         if training:
             exercises_in_training = db.session.query(Exercise).filter(Exercise.training_id == training.id).all()
 
-            training_json = json.dumps(training.serialize())
-            exercises_in_training_json = jsonify(exersises=Exercise.serialize_list(exercises_in_training))
+            if exercises_in_training:
+                training_schema = TrainingSchema()
+                exercise_schema = ExerciseSchema(many=True)
+                print(training_schema.dump(training))
 
-            return Response('{"data":{"training":' + '"' + training_json + '", "exercises":' + exercises_in_training_json + '}, "status":200}', status=200, mimetype='application/json')
+                training_output = json.dumps(training_schema.dump(training))
+                exercises_output = json.dumps(exercise_schema.dump(exercises_in_training))
+
+                return Response('{"data":{"training":' + '"' + training_output + '", "exercises":' + exercises_output +
+                                '}, "status":200}', status=200, mimetype='application/json')
+            else:
+                return Response("{'message':'Unexpected error. Empty training.'}", status=406,
+                                mimetype='application/json')
         else:
-            return Response("{'message':'You are not verified'}", status=403, mimetype='application/json')
+            return Response("{'message':'There is no new trainings for you.'}", status=200, mimetype='application/json')
     else:
-        return Response("{'message':'Login and password pair is incorrect'}", status=400, mimetype='application/json')
+        return Response("{'message':'You are not authorized. Please Login again.'}", status=401, mimetype='application/json')

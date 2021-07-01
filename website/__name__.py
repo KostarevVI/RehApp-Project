@@ -9,8 +9,10 @@ from flask_wtf.csrf import CSRFProtect
 from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy import *
 from datetime import date
+from flask_marshmallow import Marshmallow
 
 db = SQLAlchemy()
+ma = Marshmallow()
 app = Flask(__name__)
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -35,9 +37,11 @@ csrf = CSRFProtect(app)
 
 def create_app():
     global db
+    global ma
     global app
 
     db = SQLAlchemy(app, session_options={"expire_on_commit": False})
+    ma = Marshmallow(app)
 
     from .auth import auth
     from .rehapp import rehapp

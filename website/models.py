@@ -2,22 +2,12 @@
 from sqlalchemy import ARRAY, Boolean, CheckConstraint, Column, Date, DateTime, Enum, ForeignKey, Integer, SmallInteger, \
     String, Table, Text, Time, text, UniqueConstraint
 from sqlalchemy.orm import relationship
-from .__name__ import db, app
+from .__name__ import db, app, ma
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer
-from sqlalchemy.inspection import inspect
+
 
 metadata = db.metadata
-
-
-class Serializer(object):
-
-    def serialize(self):
-        return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
-
-    @staticmethod
-    def serialize_list(l):
-        return [m.serialize() for m in l]
 
 
 class Patient(db.Model):
@@ -151,7 +141,7 @@ class PatientOfTherapist(db.Model):
     therapist = relationship('Therapist')
 
 
-class Training(db.Model, Serializer):
+class Training(db.Model):
     __tablename__ = 'training'
     __table_args__ = (
         CheckConstraint("(assigned_by)::text <> ''::text"),
@@ -171,13 +161,15 @@ class Training(db.Model, Serializer):
 
     patient = relationship('Patient')
 
-    def serialize(self):
-        d = Serializer.serialize(self)
-        del d['patient_id']
-        return d
+
+class TrainingSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Training
+        include_fk = True
 
 
-class Exercise(db.Model, Serializer):
+
+class Exercise(db.Model):
     __tablename__ = 'exercise'
     __table_args__ = (
         CheckConstraint('(involvement_threshold > 0) AND (involvement_threshold <= 10)'),
@@ -202,9 +194,11 @@ class Exercise(db.Model, Serializer):
 
     training = relationship('Training')
 
-    def serialize(self):
-        d = Serializer.serialize(self)
-        return d
+
+class ExerciseSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Exercise
+        include_fk = True
 
 
 class ExerciseGraph(db.Model):

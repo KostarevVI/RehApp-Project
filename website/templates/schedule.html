@@ -24,19 +24,28 @@
 
 {% block content %}
 <div class="row">
-  <div class="col-md-7 mt-5">
-    <div id='calendar'></div>
-  </div>
   <div class="col-md-5 mt-5">
-    <div class="form-group col-md-12" style="margin-bottom:11px;">
-      <h3 class="mt-1">
-        <label for="overflow_exercises" class="">Exercises in Training</label>
-      </h3>
+      <div class="form-row" style="margin-bottom:11px; margin-top:3px;">
+          <div class="col-md-6">
+              <h3 >Training for</h3>
+          </div>
+          <div class="col-md-6">
+              <select class="form-control" id="exampleSelect">
+                  <option>John Doe (ID:2)</option>
+              </select>
+          </div>
+    <!--      <h3 class="mt-1">-->
+    <!--        <label for="overflow_exercises" class="">Exercises in Training</label>-->
+    <!--      </h3>-->
+          </div>
+
       <div class="overflow-auto mt-1" id="overflow_exercises">
 
       </div>
     </div>
-  </div>
+    <div class="col-md-7 mt-5">
+        <div id='calendar'></div>
+    </div>
 </div>
 
 {% endblock %}
